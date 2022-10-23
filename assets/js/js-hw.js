@@ -1,219 +1,278 @@
-console.log('Sample JavaScript #2 HW #14');
+console.log('Sample JavaScript #3 HW #15');
 
 /*
  * #1
  *
- * Создайте объект userObj, описывающий человека.
- *
- * Следующие поля обязательны:
- * firstName – любое имя, строка
- * lastName – любая фамилия, строка
- * age – любой возраст, число
+ * Создайте функцию counter(), которая должна реализовать счетчик с помощью замыкания:
+ * функция может принимать число в качестве аргумента counter(n)
+ * если число передано в функцию – счет начинается с указанного числа
+ * если нет – то счет продолжается
  */
 
-var userObj = {
-    firstName: "Jack",
-    lastName: "Freedom",
-    age: 25,
+const counter = (function() {
+    let count = 0;
 
-    fullName: function() {
-        return userObj.firstName + " " + userObj.lastName;
-    }
-};
+    return function(n) {
+        count = n !== undefined ? n : count;
+        return count++;
+    };
+}());
 
-console.log(userObj.fullName());
+// console.log(counter()); // 0
+
+// console.log(counter()); // 1
+
+// console.log(counter(100)); // 100
+
+// console.log(counter()); // 101
+
+// console.log(counter(500)); // 500
+
+// console.log(counter()); // 501
+
+// console.log(counter(0)); // 0
+
+// console.log(counter()); // 1
 
 /*
  * #2
  *
- * Для объекта из п.1 создайте метод fullName, который будет возвращать полное имя,
- * состоящее из firstName и lastName, склеенных в строку через пробел.
+ * Создайте функцию counting, которая должна реализовать три метода с помощью замыкания:
+ * первоначальное значение счетчика – 0
+ * counting.value() – возвращает значение счетчика
+ * counting.value(n) – устанавливает значение счетчика, возвращает новое значение
+ * counting.increment() – увеличивает значение счетчика на 1
+ * counting.decrement() – уменьшает значение счетчика на 1
+ */
+
+const counting = (function() {
+    let count = 0;
+
+    return {
+        value(n) {
+            count = n !== undefined ? n : count;
+
+            return count;
+        },
+        increment() {
+            return count++;
+        },
+        decrement() {
+            return count--;
+        }
+    };
+}());
+
+// console.log(counting.value()); // 0
+
+// counting.increment();
+
+// counting.increment();
+
+// counting.increment();
+
+// console.log(counting.value()); // 3
+
+// counting.decrement();
+
+// counting.decrement();
+
+// console.log(counting.value()); // 1
+
+// console.log(counting.value(100)); // 100
+
+// counting.decrement();
+
+// console.log(counting.value()); // 99
+
+// console.log(counting.value(200)); // 200
+
+// counting.increment();
+
+// console.log(counting.value()); // 201
 
 /*
  * #3
  *
- * Дана функция defUpperStr('My text'), которая возвращает текст, преобразованный в верхний регистр, т.е:
- * defUpperStr('My text') → 'MY TEXT'.
- *
- * Если функция вызывается без параметра defUpperStr(), она не должна возвращать undefined,
- * в этом случае требуется вернуть строку текста по умолчанию в верхнем регистре, т.е:
- * defUpperStr() → 'DEFAULT TEXT'.
- *
- * При выполнении задачи не используйте оператор if, требуется решение с логическим оператором ||.
+ * Создайте функцию myPow(a, b, myPrint). Внутри реализуйте рекурсию для подсчета результата возведения числа a в степень b.
+ * функция myPrint(a, b, res) – глобальная функция, которая должна генерировать из параметров a, b, res строку вида 'a^b=res' и возвращать ее
+ * myPrint() должна быть передана в myPow() как параметр и вызвана внутри как callback-функция
+ * функция myPow() в качестве возвращаемого значения принимает результат myPrint()
+ * Например:
+ * console.log(myPow(3, 4, myPrint)); // 3^4=81
+ * console.log(myPow(2, 3, myPrint)); // 2^3=8
  */
 
-function defUpperStr(text){
-    text = text || "DEFAULT TEXT";
-    text = text.toUpperCase();
+const myPrint = (a, b, res) => `${a}^${b}=${res}`;
 
-    return text;
-}
+const myPow = function(a, b, callback) {
+    const calc = (num, deg) => {
+        if (deg !== 1) {
+            return num *= calc(num, deg - 1);
+        }
+
+        return num;
+    };
+
+    return callback(a, b, calc(a, b));
+};
+
+// console.log(myPow(3, 4, myPrint)); // 3^4=81
+
+// console.log(myPow(2, 3, myPrint)); // 2^3=8
 
 /*
  * #4
  *
- * Создайте функцию evenFn(n), которая принимает параметром число – количество итераций цикла,
- * т.е. for 0..n. Функция должна вернуть массив, состоящий только из четных значений, генерируемых в цикле.
+ * Создайте несколько однотипных объектов для описания автомобиля. Соблюдайте следующие правила, используйте следующие поля:
+ * имя объекта car – обязательно и необходимое для тестирования, дальнейшее именование объектов – на ваше усмотрение
+ * car.engine – объем двигателя, числовое поле
+ * car.model – модель авто, строка
+ * car.name – бренд авто, строка
+ * car.year – год выпуска, число
+ * car.used – строка для описания состояния авто, допускаются значения 'used' и 'new'
  *
- * Причем:
- * 0 не должен попадать в результирующий массив
- * цикл должен работать до n включительно
- * разрешен только оператор for
- *
- * Например:
- * evenFn(10) → [2, 4, 6, 8, 10]
- * evenFn(15) → [2, 4, 6, 8, 10, 12, 14]
- * evenFn(20) → [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
- */
-
-function evenFn(n) {
-    let numArr = [];
-
-    for(let i = 2; i <= n; i+=2) {
-        numArr.push(i);
-    }
-
-    return numArr;
-}
-
-/*
  * #5
  *
- * Создайте функцию weekFn(n), которая принимает номер дня недели, а возвращает его название.
- * Если вводится строка, любое дробное число или число вне диапазона 1..7 – функция должна вернуть null.
+ * Для созданных ранее объектов определите метод info(), используя ключевое слово this.
+ * данный метод должен формировать и возвращать строку с полной информацией об автомобиле, например:
+ * Chevrolet Lacetti, 2000cc, year 2010, used
+ * Infinite FX50 AWD, 5000cc, year 2019, new
+ * пробелы, запятые, символы cc и текст – имеют значение и проверяются при тестировании кода
  *
- * Например:
- * 1 → 'Понедельник'
- * 2 → 'Вторник'
- * ...
- * 7 → 'Воскресенье'
- *
- * В реализации функции обязательно должны быть использованы операторы switch / case / default.
- */
-
-function weekFn(n) {
-    switch (n) {
-        case 1: 
-            n = "Понедельник";
-            break;
-        case 2: 
-            n = "Вторник";
-            break;
-        case 3: 
-            n = "Среда";
-            break;
-        case 4: 
-            n = "Четверг";
-            break;
-        case 5: 
-            n = "Пятница";
-            break;
-        case 6: 
-            n = "Суббота";
-            break;
-        case 7: 
-            n = "Воскресенье";
-            break;
-        default:
-            n = null;
-    }
-    return n;
-}
-
-/*
  * #6
  *
- * создайте функцию ageClassification(n), которая будет в качестве параметра принимать любые числа
- * и возвращать строку согласно следующим условиям, n:
- *           менее 0 – null
- *             0..24 – 'детский возраст'
- *           24+..44 – 'молодой возраст'
- *           44+..65 – 'средний возраст'
- *           65+..75 – 'пожилой возраст'
- *           75+..90 – 'старческий возраст'
- *          90+..122 – 'долгожители'
- *         более 122 – null
- *
- * При выполнении задания допускается использовать только тернарный оператор ?.
- * Использование операторов if, switch – запрещено.
+ * Для созданных ранее объектов измените свойство used, используя аксессоры (геттер и сеттер).
+ * - используйте текущий год либо непосредственно в своем коде, либо с помощью глобальной переменной, например, yearNow
+ * - если год выпуска автомобиля отличается от текущего года, геттер used должен выводить текст 'used'
+ * - если год выпуска автомобиля совпадает с текущим годом, геттер used должен выводить текст 'new'
+ * - если сеттеру used присвоено значение 'new', при этом года выпуска автомобиля отличается от текущего года,
+ * - необходимо изменить год выпуска автомобиля, установив в качестве значения текущий год
+ * - если сеттеру used присвоено значение 'used', ничего делать не нужно
  */
 
-function ageClassification(n) {
-    let flag;
-    
-    flag = (n >= 0 && n <= 24) ? "детский возраст" : (n > 24 && n <= 44) ? "молодой возраст" : (n > 44 && n <= 65) ? "средний возраст" : (n > 65 && n <= 75) ? "пожилой возраст" : (n > 75 && n <= 90) ? "старческий возраст" : (n > 90 && n <= 122) ? "долгожители" : null; 
+let yearNow = new Date().getFullYear();
 
-    return flag;
-}
- 
+const info = function() {
+    return `${this.name} ${this.model}, ${this.engine}cc, year ${this.year}, ${this.used}`;
+};
+
+const car = {
+    engine: 2000,
+    model: "Lacetti",
+    name: "Chevrolet",
+    year: 2010,
+    info,
+    get used() {
+        return this.year !== yearNow ? "used" : "new";
+    },
+    set used(value) {
+        if (value === "new" && this.year !== yearNow) {
+            this.year = yearNow;
+        }
+    }
+};
+
+const car2 = {
+    engine: 5000,
+    model: "FX50 AWD",
+    name: "Infinite",
+    year: 2019,
+    info,
+    get used() {
+        return this.year !== yearNow ? "used" : "new";
+    },
+    set used(value) {
+        if (value === "new" && this.year !== yearNow) {
+            this.year = yearNow;
+        }
+    }
+};
+
+// console.log(car.info()); // Chevrolet Lacetti, 2000cc, year 2010, used
+
+// car.used = 'new';
+
+// console.log(car.info()); // Chevrolet Lacetti, 2000cc, year 2019, new -- год изменен
+
+// car.used = 'used';
+
+// console.log(car.info()); // Chevrolet Lacetti, 2000cc, year 2019, new -- изменения не выполняются
+
+// console.log(car2.info()); // Infinite FX50 AWD, 5000cc, year 2019, new
+
+// car.used = 'used';
+
+// console.log(car2.info()); // Infinite FX50 AWD, 5000cc, year 2019, new -- изменения не выполняются
+
 /*
  * #7
- *
- * Создайте функцию oddFn(n), которая принимает параметром число – количество итераций цикла.
- * Функция должна вернуть массив, состоящий только из нечетных значений, генерируемых в цикле.
- *
- * Причем:
- * 0 не должен попадать в результирующий массив
- * цикл должен работать до n включительно
- * разрешен только оператор while
- *
- * Например:
- * oddFn(10) → [1, 3, 5, 7, 9]
- * oddFn(15) → [1, 3, 5, 7, 9, 11, 13, 15]
- * oddFn(20) → [1, 3, 5, 7, 9, 11, 13, 15, 17, 19]
+ * Создайте функцию myMax(arr), которая в качестве параметра принимает
+ * произвольный числовой массив и возвращает максимальное число из переданного ей массива.
+ * В реализации функции должен быть применен метод Math.max() и apply().
  */
 
-function oddFn(n) {
-    let oddArr = [];
-    let i = 1;
+let list = [12, 23, 100, 34, 56, 9, 233];
 
-    while (i <= n) {
-        oddArr.push(i);
-        i+=2;
-    }
-    return oddArr;
-}
+const myMax = function(arr) {
+    return Math.max.apply(Math, arr);
+};
+
+//console.log(myMax(list)); // 233
 
 /*
  * #8
  *
- * Создайте основную функцию mainFunc(a, b, func), которая принимает три параметра:
- * a – число
- * b - число
- * func –  обрабатывающая параметры a и b, возвратная (callback) функция
- *
- * Реализуйте проверку: если третьим параметром передается не функция, нужно вернуть false.
- *
+ * Создайте функцию myMul(a, b), которая будет умножать числа а и b, возвращая результат.
  */
 
 /*
- * реализуйте следующие функции, которые будут осуществлять механизм callback в основной функции,
- * возвращая ей результат собственного вычисления...
- * для возведения в степень и получения произвольного значения можете воспользоваться методами объекта Math.
+ * создайте функции myDouble(n), которая принимает один параметр и  удваивает его.
+ * Использовать умножение или другие математические операции внутри функции – запрещено, только bind() и myMul().
+ * Функция возвращает результат вычисления.
  */
 
-function mainFunc(a, b, func) {
-    if (func && typeof func === 'function') {
-        return func(a, b);
-    } 
-  
-    return false;
-  }
-  
-  function cbRandom(a, b) {
-    return Math.floor(Math.random() * (b - a + 1)) + a;
-  }
+const myMul = (a, b) => a * b;
 
-  function cbPow(a, b) {
-    return Math.pow(a, b);
-  }
+const myDouble = myMul.bind(null, 2);
 
-  function cbAdd(a, b) {
-    return a + b;
-  }
+const myTriple = myMul.bind(null, 3);
 
+console.log(myDouble(3)); // = myMul(2, 3) = 6
 
-console.log(mainFunc(2, 5, cbRandom)); // целые числа в диапазоне 2..5
-console.log(mainFunc(2, 5, cbPow)); // 32
-console.log(mainFunc(2, 5, cbAdd)); // 7
-console.log(mainFunc(2, 5, 'not a func')); // false
+console.log(myDouble(4)); // = myMul(2, 4) = 8
+
+console.log(myDouble(5)); // = myMul(2, 5) = 10
+
+console.log(myTriple(3)); // = myMul(3, 3) = 9
+
+console.log(myTriple(4)); // = myMul(3, 4) = 12
+
+console.log(myTriple(5)); // = myMul(3, 5) = 15
+
+/*
+ * #9
+ *
+ * Постройте функцию myUniq(arr), которая будет принимать произвольный массив
+ * повторяющихся примитивных значений (например, имена пользователей или числа ).
+ * Функция должна вернуть коллекцию уникальных значений.
+ * В реализации разрешено использование set.
+ * Любые условные операторы – запрещены и объекты.
+ */
+
+let notUniqNums = [1, 1, 2, 3, 4, 5, 6, 7];
+let notUniqStrings = ['Bob', 'Kate', 'Jhon', 'Tom', 'Jhon', 'Kate', 'Tom', 'Bob', 'Jhon', 'Tom'];
+
+const myUniq = function(arr) {
+    let set = new Set();
+
+    arr.forEach(el => {
+        set.add(el);
+    });
+
+    return set;
+};
+
+console.log(myUniq(notUniqNums));
+
+console.log(myUniq(notUniqStrings));
