@@ -273,6 +273,6 @@ const myUniq = function(arr) {
     return set;
 };
 
-console.log(myUniq(notUniqNums));
+//console.log(myUniq(notUniqNums));
 
-console.log(myUniq(notUniqStrings));
+//console.log(myUniq(notUniqStrings));
