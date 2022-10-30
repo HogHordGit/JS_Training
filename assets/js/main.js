@@ -1,124 +1,124 @@
 
-    let container = 0;
-    let indicator = null;
+let container = 0;
+let indicator = null;
 
-    function createContainer() {
-        const main = document.createElement("div");
-        const body = document.querySelector("body");
+function createContainer() {
+    const main = document.createElement("div");
+    const body = document.querySelector("body");
 
-        main.classList.add("carousel");
-        main.setAttribute("id", "carousel");
+    main.classList.add("carousel");
+    main.setAttribute("id", "carousel");
 
-        body.insertBefore(main, body.firstChild);
+    body.insertBefore(main, body.firstChild);
 
-        container = document.querySelector("#carousel");
+    container = document.querySelector("#carousel");
+}
+
+function createSlides(n) {
+    const slidesContainer = document.createElement("ul");
+    slidesContainer.classList.add("slides");
+
+    for (let i = 0; i < n; i++) {
+        const slide = document.createElement("li");
+        const a = document.createElement("a");
+
+        slide.classList.add("slides__item");
+        if (i == 0) slide.classList.add("active");
+
+        a.setAttribute("href", "#");
+
+        slidesContainer.append(slide);
+        slide.append(a);
     }
 
-    function createSlides(n) {
-        const slidesContainer = document.createElement("ul");
-        slidesContainer.classList.add("slides");
+    container.append(slidesContainer);
+}
 
-        for (let i = 0; i < n; i++) {
-            const slide = document.createElement("li");
-            const a = document.createElement("a");
+function createIndicators(n) {
+    const indicatContainer = document.createElement("div");
+    indicatContainer.classList.add("indicators");
 
-            slide.classList.add("slides__item");
-            if (i == 0) slide.classList.add("active");
+    for (let i = 0; i < n; i++) {
+        const el = document.createElement("span");
 
-            a.setAttribute("href", "#");
+        el.classList.add("indicators__item");
+        if (i == 0) el.classList.add("active");
 
-            slidesContainer.append(slide);
-            slide.append(a);
-        }
+        el.setAttribute("data-slide-to", i);
 
-        container.append(slidesContainer);
+        indicatContainer.append(el);
     }
 
-    function createIndicators(n) {
-        const indicatContainer = document.createElement("div");
-        indicatContainer.classList.add("indicators");
+    container.append(indicatContainer);
+}
 
-        for (let i = 0; i < n; i++) {
-            const el = document.createElement("span");
+function createControls() {
+    const arrCtr = ["prev", "next", "pause"];
+    const arrI = ["-chevron-left", "-chevron-right", "-play"];
+    const contrContainer = document.createElement("div");
 
-            el.classList.add("indicators__item");
-            if (i == 0) el.classList.add("active");
-
-            el.setAttribute("data-slide-to", i);
-
-            indicatContainer.append(el);
-        }
-
-        container.append(indicatContainer);
-    }
-
-    function createControls() {
-        const arrCtr = ["prev", "next", "pause"];
-        const arrI = ["-chevron-left", "-chevron-right", "-play"];
-        const contrContainer = document.createElement("div");
-
-        contrContainer.classList.add("controls");
+    contrContainer.classList.add("controls");
         
-        for (let i = 0; i < arrCtr.length; i++) {
-            const controller = document.createElement("div");
-            const elI = document.createElement("i");
+    for (let i = 0; i < arrCtr.length; i++) {
+        const controller = document.createElement("div");
+        const elI = document.createElement("i");
 
-            controller.classList.add("controls__item");
-            controller.classList.add(`controls__${arrCtr[i]}`);
+        controller.classList.add("controls__item");
+        controller.classList.add(`controls__${arrCtr[i]}`);
             
-            elI.classList.add("fas");
-            elI.classList.add(`fa${arrI[i]}`);
+        elI.classList.add("fas");
+        elI.classList.add(`fa${arrI[i]}`);
 
-            contrContainer.append(controller);
-            controller.append(elI);
+        contrContainer.append(controller);
+        controller.append(elI);
+    }
+
+    container.append(contrContainer);
+}
+
+function createStyles() {
+    styleContainer = document.createElement("style");
+
+    styleContainer.innerHTML = `
+        .controls,
+        .slides {
+            position: relative;
         }
-
-        container.append(contrContainer);
-    }
-
-    function createStyles() {
-        styleContainer = document.createElement("style");
-
-        styleContainer.innerHTML = `
-            .controls,
-            .slides {
-                position: relative;
-            }
-            .indicators {
-                position: relative;
-                display: flex;
-            }
-            .indicators__item {
-                display: block;
-                width: 20px;
-                height: 20px;
-                background-color: green;
-                margin: 5px;
-              }
-        `;
-
-        container.append(styleContainer);
-    }
-
-    function indicatorListener(event) {
-        let target = event.target;
-      
-        if (target.classList.contains("indicators__item")) {
-            target.style.backgroundColor = "red";
-        
-            if (indicator !== null) {
-                indicator.removeAttribute("style");
-            }
-        
-            indicator = target;
+        .indicators {
+            position: relative;
+            display: flex;
         }
-    }
+        .indicators__item {
+            display: block;
+            width: 20px;
+            height: 20px;
+            background-color: green;
+            margin: 5px;
+        }
+    `;
+
+    container.append(styleContainer);
+}
+
+function indicatorListener(event) {
+    let target = event.target;
       
-    function setListener() {
-        let indicatorsContainer = document.querySelector(".indicators");
+    if (target.classList.contains("indicators__item")) {
+        target.style.backgroundColor = "red";
         
-        indicatorsContainer.addEventListener("click", indicatorListener);
+        if (indicator !== null) {
+            indicator.removeAttribute("style");
+        }
+        
+        indicator = target;
     }
+}
+      
+function setListener() {
+    let indicatorsContainer = document.querySelector(".indicators");
+        
+    indicatorsContainer.addEventListener("click", indicatorListener);
+}
 
 function createCarousel(slidesCount) {
     //createContainer();
