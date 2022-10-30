@@ -1,109 +1,136 @@
-let zib = "zibert";
 
-console.log(zib.includes("zib"));
+    let container = 0;
+    let indicator = null;
 
-class Person {
-    constructor(name, age, gender) {
-        this.name = name;
-        this.age = age + " лет";
-        this.gender = gender;
+    function createContainer() {
+        const main = document.createElement("div");
+        const body = document.querySelector("body");
+
+        main.classList.add("carousel");
+        main.setAttribute("id", "carousel");
+
+        body.insertBefore(main, body.firstChild);
+
+        container = document.querySelector("#carousel");
     }
-    greet() {
-        return `Hi! ${this.name}`;
+
+    function createSlides(n) {
+        const slidesContainer = document.createElement("ul");
+        slidesContainer.classList.add("slides");
+
+        for (let i = 0; i < n; i++) {
+            const slide = document.createElement("li");
+            const a = document.createElement("a");
+
+            slide.classList.add("slides__item");
+            if (i == 0) slide.classList.add("active");
+
+            a.setAttribute("href", "#");
+
+            slidesContainer.append(slide);
+            slide.append(a);
+        }
+
+        container.append(slidesContainer);
     }
+
+    function createIndicators(n) {
+        const indicatContainer = document.createElement("div");
+        indicatContainer.classList.add("indicators");
+
+        for (let i = 0; i < n; i++) {
+            const el = document.createElement("span");
+
+            el.classList.add("indicators__item");
+            if (i == 0) el.classList.add("active");
+
+            el.setAttribute("data-slide-to", i);
+
+            indicatContainer.append(el);
+        }
+
+        container.append(indicatContainer);
+    }
+
+    function createControls() {
+        const arrCtr = ["prev", "next", "pause"];
+        const arrI = ["-chevron-left", "-chevron-right", "-play"];
+        const contrContainer = document.createElement("div");
+
+        contrContainer.classList.add("controls");
+        
+        for (let i = 0; i < arrCtr.length; i++) {
+            const controller = document.createElement("div");
+            const elI = document.createElement("i");
+
+            controller.classList.add("controls__item");
+            controller.classList.add(`controls__${arrCtr[i]}`);
+            
+            elI.classList.add("fas");
+            elI.classList.add(`fa${arrI[i]}`);
+
+            contrContainer.append(controller);
+            controller.append(elI);
+        }
+
+        container.append(contrContainer);
+    }
+
+    function createStyles() {
+        styleContainer = document.createElement("style");
+
+        styleContainer.innerHTML = `
+            .controls,
+            .slides {
+                position: relative;
+            }
+            .indicators {
+                position: relative;
+                display: flex;
+            }
+            .indicators__item {
+                display: block;
+                width: 20px;
+                height: 20px;
+                background-color: green;
+                margin: 5px;
+              }
+        `;
+
+        container.append(styleContainer);
+    }
+
+    function indicatorListener(event) {
+        let target = event.target;
+      
+        if (target.classList.contains("indicators__item")) {
+            target.style.backgroundColor = "red";
+        
+            if (indicator !== null) {
+                indicator.removeAttribute("style");
+            }
+        
+            indicator = target;
+        }
+    }
+      
+    function setListener() {
+        let indicatorsContainer = document.querySelector(".indicators");
+        
+        indicatorsContainer.addEventListener("click", indicatorListener);
+    }
+
+function createCarousel(slidesCount) {
+    //createContainer();
+    container = document.querySelector('#carousel');
+    createSlides(slidesCount);
+    createIndicators(slidesCount);
+    createControls();
+    createStyles();
+    setListener();
 }
 
-const person = new Person("Jogn", 25, "male");
-console.log(person);
-
-class Developer extends Person {
-    constructor(...args) {
-        super(...args);
-        this.skills = args[3] || [];
-    }
-    greet() {
-        const res = super.greet();
-        return `${res}. Yea!`;
-    }
-    develop() {
-        return "cool!";
-    }
-}
-
-const developer = new Developer("Sol", 30, "shemale", ["zib"]);
-console.log(developer.develop());
-
-// functions
-// const Person = function(name, age, gender) {
-//     this.name = name;
-//     this.age = age + " лет";
-//     this.gender = gender;
-// };
-
-// const functionality = {
-//     start: 0,
-//     end: 122,
-//     step: 1,
-//     greet() {
-//         return `Hi! ${this.name}`;
-//     }
-// };
-
-// Person.prototype = functionality;
-// Person.prototype.constructor = Person;
-
-// const person = new Person("Zibert", 25, "male");
-
-// console.log(person);
-
-// // -----------------------------------------------------
-
-// const Developer = function(name, age, gender, skills) {
-//     Person.apply(this, arguments);
-
-//     this.skills = skills || [];
-// };
-
-// Developer.prototype = Object.create(Person.prototype);
-// Developer.prototype.constructor = Developer;
-
-// const developer = new Developer("John", 25, "male", ["css", "html"]);
-
-// console.log(developer);
-// console.log(developer.greet());
+createCarousel(5);
 
 
 
-
-// Objects
-// const Person = {
-//     constructor(name, age, gender) {
-//         this.name = name;
-//         this.age = age + " лет";
-//         this.gender = gender;
-
-//         return this;
-//     },
-//     greet() {
-//         return `Hi! ${this.name}`;
-//     }
-// };
-
-// const person = Object.create(Person).constructor("Zibert", 25, "male");
-
-// console.log(person);
-
-// const Developer = Object.create(Person);
-
-// Developer.constructor = function(name, age, gender, skills) {
-//     Person.constructor.apply(this, arguments);
-//     this.skills = skills || [];
-
-//     return this;
-// };
-
-// const developer = Object.create(Developer)
-//     .constructor("Stanislav", 25, "male");
-
-// console.log(developer);
-// console.log(developer.greet());
