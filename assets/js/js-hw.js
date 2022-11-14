@@ -28,9 +28,9 @@ function replaceHTMLComments(str) {
     return str.replace(/<!--.+?-->\s*/g, "").trim();
 }
 
-console.log(replaceHTMLComments('<!--коммент1--> код без комментов <!--коммент2-->')); // код без комментов
-console.log(replaceHTMLComments('<!--к1--> код <!-- к2 --><!-- к3 --> без <!-- к4 --> комментов')); // код без комментов
-console.log(replaceHTMLComments('код <!--к1--> без <!-- к2 --> комментов')); // код без комментов
+// console.log(replaceHTMLComments('<!--коммент1--> код без комментов <!--коммент2-->')); // код без комментов
+// console.log(replaceHTMLComments('<!--к1--> код <!-- к2 --><!-- к3 --> без <!-- к4 --> комментов')); // код без комментов
+// console.log(replaceHTMLComments('код <!--к1--> без <!-- к2 --> комментов')); // код без комментов
 
 /*
  * #3
@@ -59,8 +59,8 @@ function validateFileType(str) {
  * Функция получает строку – год, возвращает true или false.
  */
 
-function checkYear(str) {
-    //.test(str);
+function checkYear(year) {
+    return /^(2100|20\d{2}|19\d{2})$/.test(year);
 }
 
 // console.log(checkYear(1900)); // true
@@ -83,6 +83,10 @@ function checkYear(str) {
  * Функция получает строку – имейл, возвращает true или false.
  */
 
+function checkEmail(str) {
+    return /^[a-zA-z.-]+@[a-zA-z\.]+\.[a-z]{2,3}$/.test(str);
+}
+
 // console.log(checkEmail('mail@gmail.com')); // true
 // console.log(checkEmail('mail.name@mail.ua')); // true
 // console.log(checkEmail('mail-name@mail.ua')); // true
@@ -102,6 +106,10 @@ function checkYear(str) {
  *     http://site.ua, https://my-site.com, https://site.com.ua, https://subdomain.site.com.ua
  *         Функция получает строку – доменное имя, возвращает true или false.
  */
+
+function checkDomainUrl(str) {
+    return /^(http:|https:)\/\/([a-zA-Z0-9-_]+\.)*[a-zA-Z0-9-_]+\.[a-zA-Z]{2,5}?$/.test(str);
+}
 
 // console.log(checkDomainUrl('http://external.asd1230-123.asd_internal.asd.gm-_ail.com')); // true
 // console.log(checkDomainUrl('http://domain.com')); // true
@@ -129,7 +137,18 @@ function checkYear(str) {
  * В данном задании требуется использовать метод match().
  */
 
+function createLinksFromDomains(str) {
+    const reg = new RegExp('(http:|https:)\/\/([a-zA-Z0-9-_]+\\.)*[a-zA-Z0-9-_]+\\.[a-zA-Z]{2,5}', 'gi');
+
+    str.match(reg).forEach((i) => 
+        str = str.replace(i, `<a href="${i}" target="_blank">${i.replace(/^(http:|https:)\/\//gi, '')}</a>`)
+    );
+
+    return str;
+}
+
 // <a href="http://site.ua">site.ua</a> text1 <a href="https://site.com">site.com</a> text2 <a href="https://site.com.ua">site.com.ua</a> text3 <a href="https://subdomain.my-site.com.ua">subdomain.my-site.com.ua</a> text4
-// console.log(createLinksFromDomains('http://site.ua text1 https://site.com text2 https://site.com.ua text3 https://subdomain.my-site.com.ua text4'));
 // site.ua text1 <a href="https://site.com">site.com</a> text2 <a href="https://site.com.ua">site.com.ua</a> text3 subdomain.my-site.com.ua text4
+
+// console.log(createLinksFromDomains('http://site.ua text1 https://site.com text2 https://site.com.ua text3 https://subdomain.my-site.com.ua text4'));
 // console.log(createLinksFromDomains('site.ua text1 https://site.com text2 https://site.com.ua text3 subdomain.my-site.com.ua text4'));
